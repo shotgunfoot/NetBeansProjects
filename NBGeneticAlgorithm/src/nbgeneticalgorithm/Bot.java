@@ -5,7 +5,10 @@
  */
 package nbgeneticalgorithm;
 
+import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 /**
@@ -20,12 +23,43 @@ public class Bot{
     private boolean _alive;
     private double _energy = 0;
     
+    private int[] xPoly;
+    private int[] yPoly;
+    
+    private AffineTransform _at;
+    
     private Rectangle _bounds;
+    private Polygon _vision;
+    private Shape _shape;
     
     private static final int width = 9, height = 9;
     
     Bot(){
         
+    }
+    
+    public void setAffineTransform(AffineTransform at){
+        this._at = at;
+    }
+    
+    public AffineTransform getAffineTransform(){
+        return _at;
+    }
+    
+    public void setShape(Shape shape){
+        this._shape = shape;
+    }
+    
+    public Shape getShape(){
+        return _shape;
+    }
+    
+    public void setPoly(Polygon poly){
+        this._vision = poly;
+    }
+    
+    public Polygon getPoly(){
+        return _vision;
     }
 
     public Rectangle getBounds(){
@@ -138,6 +172,8 @@ class Food extends Bot{
         rect = new Rectangle();
         rect.setRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setBounds(rect);
+        
+        
     }
 }
 

@@ -16,6 +16,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
@@ -33,6 +34,7 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
     //globals
     Random rNumber = new Random();
     boolean draw = false;
+    boolean pause = false;
 
     int foodAmount, preyAmount, predatorAmount;
     long startTime;
@@ -45,11 +47,7 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
 
     ActionListener al_preyLogic;
     ActionListener al_updateTarget;
-    
-    //testing
-    //polygon test for field of view
-    Polygon po;
-    
+
     /**
      * Creates new form NBGeneticAlgorithmGUI
      */
@@ -94,6 +92,11 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
         viewPort.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 viewPortMouseMoved(evt);
+            }
+        });
+        viewPort.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewPortMouseClicked(evt);
             }
         });
 
@@ -267,7 +270,7 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
         t_preySearch.stop();
         t_preyTimer.stop();
         draw = false;
-        
+
     }//GEN-LAST:event_jbResetActionPerformed
 
     /*
@@ -306,22 +309,21 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                 int food;
 
                 for (int x = 0; x < preyAmount; x++) {
-                    for(int j = 0; j < foodAmount; j++){
-                        if(foodPop[j].isAlive()){
+                    for (int j = 0; j < foodAmount; j++) {
+                        if (foodPop[j].isAlive()) {
                             food = rNumber.nextInt(1 + (foodAmount - 1));
 
-                    distanceX = foodPop[food].getX() - preyPop[x].getX();
-                    distanceY = foodPop[food].getY() - preyPop[x].getY();
+                            distanceX = foodPop[food].getX() - preyPop[x].getX();
+                            distanceY = foodPop[food].getY() - preyPop[x].getY();
 
-                    angle = Math.toDegrees(Math.atan2(distanceY, distanceX));
+                            angle = Math.toDegrees(Math.atan2(distanceY, distanceX));
 
                     //System.out.println("foodX = " + foodPop[food].getX() + ", foodY = " + foodPop[food].getY());
-                    //System.out.println("distanceX = " + distanceX + ", distanceY = " + distanceY);
-
-                    //When handling trigonometry a 0 is by default facing right. So giving the angle 90 degrees
-                    //would make the prey face east. Adding a flat 90 degrees solves this problem cheaply.
-                    preyPop[x].setAngle(angle + 90);
-                    //System.out.println("angle = " + angle);
+                            //System.out.println("distanceX = " + distanceX + ", distanceY = " + distanceY);
+                            //When handling trigonometry a 0 is by default facing right. So giving the angle 90 degrees
+                            //would make the prey face east. Adding a flat 90 degrees solves this problem cheaply.
+                            preyPop[x].setAngle(angle + 90);
+                            //System.out.println("angle = " + angle);
                         }
                     }
 
@@ -334,7 +336,9 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 double rotation, ts, speed, velocityX, velocityY, currentX, currentY;
-                Rectangle predRect, preyRect, foodRect;
+                Rectangle preyRect;
+
+                AffineTransform t;
 
                 /*
                  NOTES FOR CHANGES
@@ -348,102 +352,114 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                  the predator ignoring food as you pass. Once at that state spin around 360 if predators then run, if not then switch
                  to search mode.
                  */
-                //super convoluted
-                for (int x = 0; x < preyAmount; x++) {
-                    
-                    switch (preyPop[x].getState()) {
-                        
-                        case Search: {
-                            rotation = preyPop[x].getRotation();
+                if (!pause) {
+                    for (int x = 0; x < preyAmount; x++) {
 
-                    //System.out.println("angle : " + preyPop[x].getAngle() + ", rotation : " + rotation);
-                            ts = preyPop[x].getTurnSpeed();
-                            speed = preyPop[x].getSpeed();
+                        switch (preyPop[x].getState()) {
 
-                            velocityX = Math.sin(rotation * Math.PI / 180) * speed;
-                            velocityY = Math.cos(rotation * Math.PI / 180) * -speed;
+                            case Search: {
+                                rotation = preyPop[x].getRotation();
 
-                            if (rotation >= preyPop[x].getAngle()) {
-                                rotation -= ts;
-                            } else if (rotation <= preyPop[x].getAngle()) {
-                                rotation += ts;
+                                ts = preyPop[x].getTurnSpeed();
+                                speed = preyPop[x].getSpeed();
+
+                                velocityX = Math.sin(rotation * Math.PI / 180) * speed;
+                                velocityY = Math.cos(rotation * Math.PI / 180) * -speed;
+
+                                if (rotation >= preyPop[x].getAngle()) {
+                                    rotation -= ts;
+                                } else if (rotation <= preyPop[x].getAngle()) {
+                                    rotation += ts;
+                                }
+
+                                currentX = preyPop[x].getX();
+                                currentY = preyPop[x].getY();
+
+                                currentX += velocityX;
+                                currentY += velocityY;
+
+                                preyPop[x].setRotation(rotation);
+                                preyPop[x].setX(currentX);
+                                preyPop[x].setY(currentY);
+
+                                break;
+
                             }
 
-                    //System.out.println("targetx " + preyPop[x].getTargetX() + ", targetY "+ preyPop[x].getTargetY());
-                            //System.out.println("currentx " + preyPop[x].getX() + ", currentY "+ preyPop[x].getY());
-                            currentX = preyPop[x].getX();
-                            currentY = preyPop[x].getY();
+                            case Eat: {
+                                System.out.println("Prey is done eating!");
+                                preyPop[x].stateSearch();
+                                break;
+                            }
 
-                            currentX += velocityX;
-                            currentY += velocityY;
+                            case Escape: {
+                                System.out.println("Escaping!");
+                                preyPop[x].stateSearch();
+                                break;
+                            }
 
-                            preyPop[x].setRotation(rotation);
-                            preyPop[x].setX(currentX);
-                            preyPop[x].setY(currentY);
+                        }
 
-                            break;
-                            
+                        //bounds setting for collision against food
+                        preyRect = preyPop[x].getBounds();
+                        preyRect.setRect(preyPop[x].getX(), preyPop[x].getY(), preyPop[x].getWidth(), preyPop[x].getHeight());
+                        preyPop[x].setBounds(preyRect);                        
+
+                        //border collision detection
+                        if (preyPop[x].getX() + 9 >= viewPort.getWidth()) {
+                            preyPop[x].setX(viewPort.getWidth() - 9);
+                        } else if (preyPop[x].getX() <= 0) {
+                            preyPop[x].setX(0);
+                        }
+
+                        if (preyPop[x].getY() <= 0) {
+                            preyPop[x].setY(0);
+                        } else if (preyPop[x].getY() + 9 >= viewPort.getHeight()) {
+                            preyPop[x].setY(viewPort.getHeight() - 9);
                         }
                         
-                        case Eat : {
-                            System.out.println("Prey is eating!");
-                            preyPop[x].stateSearch();
-                            break;
-                        }
-                            
-                        case Escape : {
-                            System.out.println("Escaping!");
-                            preyPop[x].stateSearch();
-                            break;
-                        }
-                            
+                        t = new AffineTransform();
+                        //affinetransform stuff for drawing later
+                        t.translate(preyPop[x].getX(), preyPop[x].getY());
+                        //convert the angle to radians so the displayed image is correct to direction of agent
+                        t.rotate(Math.toRadians(preyPop[x].getRotation()), 9 / 2, 9 / 2);
+                        t.scale(1, 1);
                         
-                    }
-                             
-                    preyRect = preyPop[x].getBounds();
-                    preyRect.setRect(preyPop[x].getX(), preyPop[x].getY(), preyPop[x].getWidth(), preyPop[x].getHeight());
-                    preyPop[x].setBounds(preyRect);
+                        preyPop[x].setAffineTransform(t);
+                        
+                        //polygon setting for collision against food for Search
+                        int dxpoly[] = {5, 30, -30};
+                        int dypoly[] = {5, -50, -50};
 
-                    //prey - food collision
-                    for (int j = 0; j < foodAmount; j++) {
-                        if (preyPop[x].getBounds().intersects(foodPop[j].getBounds())) {
-                            if (foodPop[j].isAlive()) {
-                                preyPop[x].addEnergy(50);
-                                foodPop[j].setAlive(false);
+                        Polygon po = new Polygon(dxpoly, dypoly, dxpoly.length);
+
+                        preyPop[x].setPoly(po);
+                        
+                        Shape s = t.createTransformedShape(preyPop[x].getPoly());
+                        
+                        preyPop[x].setShape(s);
+
+                        //prey - food collision - SHOULD MOVE THIS TO EAT STATE.
+                        for (int j = 0; j < foodAmount; j++) {
+                            if (preyPop[x].getBounds().intersects(foodPop[j].getBounds())) {
+                                if (foodPop[j].isAlive()) {
+                                    preyPop[x].addEnergy(50);
+                                    foodPop[j].setAlive(false);
+                                }
+                            }
+                     
+                            if (preyPop[x].getShape().contains(foodPop[j].getBounds())) {
+                                System.out.println("Prey No : " + x + " has found food! Switching to Eat state!");
+                                preyPop[x].stateEat();
                             }
                         }
-
                     }
 
-                    //border collision detection
-                    //prey
-                    if (preyPop[x].getX() + 9 >= viewPort.getWidth()) {
-                        preyPop[x].setX(viewPort.getWidth() - 9);
-                    } else if (preyPop[x].getX() <= 0) {
-                        preyPop[x].setX(0);
-                    }
-
-                    if (preyPop[x].getY() <= 0) {
-                        preyPop[x].setY(0);
-                    } else if (preyPop[x].getY() + 9 >= viewPort.getHeight()) {
-                        preyPop[x].setY(viewPort.getHeight() - 9);
-                    }
-                    
-                    //food
-                    if (foodPop[x].getX() + 9 >= viewPort.getWidth()) {
-                        foodPop[x].setX(viewPort.getWidth() - 9);
-                    } else if (foodPop[x].getX() <= 0) {
-                        foodPop[x].setX(0);
-                    }
-
-                    if (foodPop[x].getY() <= 0) {
-                        foodPop[x].setY(0);
-                    } else if (foodPop[x].getY() + 9 >= viewPort.getHeight()) {
-                        foodPop[x].setY(viewPort.getHeight() - 9);
-                    }
                 }
-            }
 
+                draw = true;
+
+            }
         };
 
         temp = jtfFoodPopulation.getText();
@@ -468,6 +484,22 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                 foodPop[x] = new Food();
             }
 
+            //simple border collision, pushes food to be back inside the frame rather than almost out of it
+            for (int x = 0; x < foodAmount; x++) {
+                    //food
+                    if (foodPop[x].getX() + 9 >= viewPort.getWidth()) {
+                        foodPop[x].setX(viewPort.getWidth() - 9);
+                    } else if (foodPop[x].getX() <= 0) {
+                        foodPop[x].setX(0);
+                    }
+
+                    if (foodPop[x].getY() <= 0) {
+                        foodPop[x].setY(0);
+                    } else if (foodPop[x].getY() + 9 >= viewPort.getHeight()) {
+                        foodPop[x].setY(viewPort.getHeight() - 9);
+                    }
+                }
+            
             //End of food prep
             //start of prey prep
             preyPop = new Prey[preyAmount];
@@ -475,9 +507,6 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                 preyPop[x] = new Prey();
             }
             //end of prey prep
-
-            //setting draw to true so display renders graphics
-            draw = true;
 
             /*NOTES : Currently I can stop and start this timer via the buttons on the
              interface. However it also resets the whole timer. Rendering it a bit useless        
@@ -489,9 +518,6 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
             t_preySearch = new Timer(5000, al_updateTarget);
             t_preySearch.setRepeats(true);
             t_preySearch.start();
-
-            //start of predator prep
-            //end of predator prep
             jtaConsole.append("\nEverything is correct. Running simulation now...");
             jbStart.setEnabled(false);
             jbStop.setEnabled(true);
@@ -510,21 +536,27 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
         // TODO add your handling code here:
         jbResume.setEnabled(true);
         jbStop.setEnabled(false);
+        pause = true;
         jtaConsole.append("\nPausing Simulation...");
         //Get this to pause the simulation, possibly rename it to pause
     }//GEN-LAST:event_jbStopActionPerformed
 
     private void viewPortMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPortMouseMoved
         // TODO add your handling code here:
-        System.out.println(viewPort.getMousePosition());
+        //System.out.println(viewPort.getMousePosition());
     }//GEN-LAST:event_viewPortMouseMoved
 
     private void jbResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbResumeActionPerformed
         // TODO add your handling code here:
         jbResume.setEnabled(false);
         jbStop.setEnabled(true);
+        pause = false;
         jtaConsole.append("\nResuming Simulation...");
     }//GEN-LAST:event_jbResumeActionPerformed
+
+    private void viewPortMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewPortMouseClicked
+
+    }//GEN-LAST:event_viewPortMouseClicked
 
     /**
      * @param args the command line arguments
@@ -618,30 +650,16 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                         t.translate(foodPop[x].getX(), foodPop[x].getY());
                         t.scale(1, 1);
                         g2d.drawImage(grass, t, this);
-                        //g2d.drawRect((int)foodPop[x].getX(), (int)foodPop[x].getY(), (int)foodPop[x].getWidth(), (int)foodPop[x].getHeight());
+
                     }
                 }
-                
+
                 for (int x = 0; x < preyAmount; x++) {
                     if (preyPop[x].isAlive()) {
-                        AffineTransform t = new AffineTransform();
-                        t.translate(preyPop[x].getX(), preyPop[x].getY());
-                        //convert the angle to radians so the displayed image is correct to direction of agent
-                        t.rotate(Math.toRadians(preyPop[x].getRotation()), 9 / 2, 9 / 2);
-                        t.scale(1, 1);
 
-                        /*
-                         Messing with polygons for field of view
-                         */
-                        /*
-                         int xpoly[] = {(int)preyPop[x].getX() + 10, (int)preyPop[x].getX(), (int)preyPop[x].getY() + 10};
-                         int ypoly[] = {(int)preyPop[x].getY() + 10, (int)preyPop[x].getY(), (int)preyPop[x].getY() + 10};
-                         po = new Polygon(xpoly, ypoly, xpoly.length);
-                         g2d.fillPolygon(po);
-                         */
-                        g2d.drawImage(prey, t, this);
-                        //g2d.drawRect((int)preyPop[x].getX(), (int)preyPop[x].getY(), (int)preyPop[x].getWidth(), (int)preyPop[x].getHeight());
-                        
+                        g2d.drawImage(prey, preyPop[x].getAffineTransform(), this);
+
+                        g2d.fill(preyPop[x].getShape());
                     }
                 }
 
