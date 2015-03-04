@@ -1,2 +1,0 @@
-inheritancepractice.Toast
-inheritancepractice.Butter
