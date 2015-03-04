@@ -1,0 +1,12 @@
+Attempted to add in one of three states for the Prey agent.
+Search, Eat and Escape.
+
+All three are self explanatory. More specifically for Search : Puts a random point on the map, rotate the prey to face the point by working out the angle difference between it and then allow the prey to slowly move there. 
+Problems so far : The angle constantly changes until it reaches 90 degrees. This is because the calculation uses current location of agent every iteration of the loop. Needs to change it so it takes the position once and not constantly. This would eliminate the 90 degree bug. Finally, when the prey reaches the location it needs to have a new point created.
+Another note for Search. It doesn't "see" the food. There is no collision detection or any vision going. Needs to have a search field of view in front of the prey that rotates with it and when an item of food is in there it switches to Eat. Look at finite state machines for influence on how to design the switches between states.
+
+Eat and escape are not implemented at all but will be based on the work laid out by Search.
+
+Final notes :
+I am unhappy with the way the attributes are generated. The attributes should be generated when the prey are generated in the loop of however many there is. Do this with constructors and proper inheritance for the bot class.
+Bot is default, Food, Prey and Predator classes will inherit Bot. The constructor for the 3 will be unique in generating their attributes and storing them in a chromosome string at some point for the genetic algorithm.

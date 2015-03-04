@@ -1,0 +1,4 @@
+Tried a few things this version. Changing the way threading works so that it was seperate thread handling all logic
+BUT it failed. Had it sending the prey array across and it worked fine, just too fast. Didnt need it. Timers can do the same thing and can be controlled by timing. HOWEVER. Timers do have problems, couldn't get the search idea working properly. Got the 90 degree bug working by setting a seperate timer to make a random target every 5 seconds. Works, but prey bots get stuck on walls due to low abilities.
+
+A better option is to give the coordinates of a randomly selected food item. Then let it bee line towards it. If vision finds another food item along the way then reset the target to that, after eating choose a new random food coordinates and repeat.

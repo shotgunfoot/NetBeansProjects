@@ -1,0 +1,12 @@
+Potched around implementing a custom Rectangle class labeled "cRectangle". I did this because the default Rectangle class only accepts an "int, int, int and int" as parameters. The two integers are x and y coordinates and the second pair is width and height. 
+
+My coordinates are doubles for better precision. Got stuck when trying to implement the .intersects method. intersects returns a boolean 1 if two Rectangles are intersecting. At the moment it is a bit imprecise because it will convert the doubles to integers. This means a loss of precision. Also I assume that the Rectangles dont rotate with the image.
+
+The fact that the rectangles dont fit perfectly to the images on screen might be acceptable. The fact that they need integers instead of doubles is a definite problem. Too much of a precision loss for me.
+
+The problem of rects not taking doubles was rectified (haha) Simply put, I did not look hard enough into the capabilities of the class Rectangle. Instead of using the constructor to create my rectangles. I used the built in funtion "setRect(double, double, double, double)". This as you can see allowed doubles to be used. Use this link to see the other Rectangle functions used, like "intersects".
+
+http://developer.classpath.org/doc/java/awt/Rectangle-source.html
+
+
+There was a bug where when the simulation was reset and started again the bots would move faster and faster. The bug was the duplication of Timers that handled the movement for the bots. More timers means more movement loops. Fixed this by setting the timers to stop in the Reset button listener.

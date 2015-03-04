@@ -1,0 +1,21 @@
+AN answer found from stack overflow
+
+http://stackoverflow.com/questions/16133822/java-rotating-image-so-that-it-points-at-the-mouse-cursor
+
+"
+To find the angle from a coordinate (0,0) to another coordinate (x,y), we can use the trigonometric function tan^-1(y/x).
+
+Java's Math class specifies a static method atan2 which acts as a tan^-1 function (also known as "arctangent", hence "atan") and returns the angle in degrees. (There is a method atan which returns the angle in radians, but only takes one argument. See the linked Javadoc.)
+
+In order to find the angle in degrees from the coordinate of your "player" to the coordinate of the mouse cursor, (I'll assume this "player" you make mention of has x and y coordinates), we need to do something like this:
+
+double theta = Math.atan2(cursorY - player.getY(), cursorX - player.getX());
+
+It is also of note that an angle of zero degrees would indicate that the mouse is directly to the right of the player. You mention that the "default player image" points upwards; if you mean that before rotation, your image faces upward for the player, it would be more conventional to geometry and the Java implementation of atan2 to have your player face right "by default".
+"
+
+
+NOTE THE LAST PARAGRAPH as to why the angle is funky.
+
+
+Additional notes. Implemented a poor mans state machine for the Prey AI. Now supports state changes to eating and finally escaping. No code implemented for the other two states. Also this version does not have any collision detection between prey bots and food bots so they dont consume them. AND finally there is no actual finding nearby food implemented.

@@ -1,0 +1,15 @@
+Code Changes to lines 306 - 324.
+Made it very variable assignment heavy. Probably could make it a lot faster but for now it works.
+Basically I took the code that my car Flash game used to handle the 360 degree rotation for movement and
+implemented it here. Quite simple since there is no button pressing, the bot will do all the work itself when its
+got its AI implemented.
+
+Lastly a bug occured where the rotation applied in the logic loop didnt reflect the display output of the JPanel.
+Turns out Affine Transform struggles with degrees. Converting it to radians on render solved that problem. Need
+to check the documentation for this as to why. Google AffineTransform rotation by degrees to find stuff on why it needed converting to Radians.
+
+Also thought about adding one more attribute to the bots. But turns out the x and y location values will suffice. These variables would be exactly the same just different names. Heavily not finished yet though. Could tidy it up.
+
+Finally, the current logic loop is a Timer. Google for its Java docs to see what exactly happens on Timer creation and its overhead etc. Thinking about it, it may need to go. Or be modified. Its essentially a thread that keeps looping. This might be where the AI for the prey and predator go. They both need their own threads running at the same time. It currently only updates the locaiton and rotation values. It will need to loop through and make decisions. Make it a state based AI. 
+
+Searching loop, moving to food loop, escaping loop. These are the 3 main behaviours I want. Search is easy, just assign random direction and go until vision hits food. Moving to food is triggered by search and it will make the prey go to the food and eat (essentialy come into contact and immedietly absorb the food) then go back to search. The 3rd behaviour will only trigger if it sees predator agent. State machine.

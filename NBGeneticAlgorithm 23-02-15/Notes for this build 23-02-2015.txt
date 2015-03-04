@@ -1,0 +1,10 @@
+Last week I made a note of the generation of attributes was a bit iffy. So this version has implemented proper constructors and inheritance for each agent (bot, food, prey and predator). Well almost all agents. Mainly focused on getting Prey done so that its easy to copy across the bulk stuff for each agent. 
+
+Aim of next week is to make Prey class have its own thread control. So instead of the main program starting the Timer thread. The thread is created after the attributes are created and that this thread is handled by the corresponding class. It should be that the main class handles the drawing, the reading of attributes while each agent handles its writing by their single thread.
+
+Attempts were made to implement this threading but to no avail...Yet.
+
+ALSO need to fix the 90 degree bug (see build 22-02-2015 notes) for what that is.
+
+FINAL NOTE: 
+Getting each agent into their own thread is a decent idea. HOWEVER. What about collision detection! Two seperate threads means insane coding for collision detection between the two. Might be better to have one thread handle moving everything and collision detection. Need to think about this properly before commiting to something. Timer thread might be the best idea.
