@@ -68,12 +68,12 @@ The next part was making it so that it could be modifiable when it came to the g
 
 ANOTHER PROBLEM
 The draw method in paint obviously runs much, much...much faster than my 100 millisecond Timer that is preyLogic. Which means certain things might try to be drawn before it can actually be drawn.
-Resulting in out of bounds exceptions. Quick fix. Change it so that the Boolean controlling wether to draw or not is set to true at the end of the first iteration of a timer.
+Resulting in out of bounds exceptions. Quick fix. Change it so that the Boolean controlling whether to draw or not is set to true at the end of the first iteration of a timer.
 Future problems with this is that multiple timers (which i'll have due to predator having one themselves) will need to wait at least once for both of them to finish looping before letting them draw.
 This will cause concurrency problems in the future.
 
 ON THE GOOD SIDE
-I implemented a cheap and simple pause feature. Big fat pause boolean that allows the timers to actually loop through the logic
+I implemented a cheap and simple pause feature. Big fat pause boolean that controls whether the timers actually loop through the logic
 
 Also. State stuff is starting to work. Currently the bot will spot food, switch to eat state and then back to search state. Causing them to essentially freeze on the spot.
 Need to make it so that it continues forward, ignores all other food, when eaten that food bot THEN switch back to search. The eat states target will be the one it finds. 
