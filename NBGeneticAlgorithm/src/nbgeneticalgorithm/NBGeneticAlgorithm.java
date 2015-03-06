@@ -20,6 +20,7 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.Timer;
@@ -46,7 +47,6 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
     Prey[] preyPop;
 
     ActionListener al_preyLogic;
-    ActionListener al_updateTarget;
 
     /**
      * Creates new form NBGeneticAlgorithmGUI
@@ -267,7 +267,6 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
         jbStart.setEnabled(true);
         jbStop.setEnabled(false);
         jbResume.setEnabled(false);
-        t_preySearch.stop();
         t_preyTimer.stop();
         draw = false;
 
@@ -296,40 +295,7 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
         String temp;
 
         boolean pass = false;
-
-        /*
-         ActionListner al_updateTarget
-         Does what its labeled. Every time this is called it will assign a new target to each prey by
-         assigning the target to a food object's coordinates. The chosen food is random each time.
-         */
-        al_updateTarget = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                double distanceX, distanceY, angle;
-                int food;
-
-                for (int x = 0; x < preyAmount; x++) {
-                    for (int j = 0; j < foodAmount; j++) {
-                        if (foodPop[j].isAlive()) {
-                            food = rNumber.nextInt(1 + (foodAmount - 1));
-
-                            distanceX = foodPop[food].getX() - preyPop[x].getX();
-                            distanceY = foodPop[food].getY() - preyPop[x].getY();
-
-                            angle = Math.toDegrees(Math.atan2(distanceY, distanceX));
-
-                    //System.out.println("foodX = " + foodPop[food].getX() + ", foodY = " + foodPop[food].getY());
-                            //System.out.println("distanceX = " + distanceX + ", distanceY = " + distanceY);
-                            //When handling trigonometry a 0 is by default facing right. So giving the angle 90 degrees
-                            //would make the prey face east. Adding a flat 90 degrees solves this problem cheaply.
-                            preyPop[x].setAngle(angle + 90);
-                            //System.out.println("angle = " + angle);
-                        }
-                    }
-
-                }
-            }
-        };
+        
         al_preyLogic = new ActionListener() {
 
             @Override
@@ -339,9 +305,9 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                 Rectangle preyRect;
 
                 AffineTransform t;
-
+                
                 /*
-                 NOTES FOR CHANGES
+                 NOTES FOR PREY BEHAVIOUR
                  Search state : Choose a random location on screen and move there. If vision hits any food
                  switch to Eat state. If no food is found choose a new random location and move there.
                 
@@ -355,55 +321,10 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                 if (!pause) {
                     for (int x = 0; x < preyAmount; x++) {
 
-                        switch (preyPop[x].getState()) {
-
-                            case Search: {
-                                rotation = preyPop[x].getRotation();
-
-                                ts = preyPop[x].getTurnSpeed();
-                                speed = preyPop[x].getSpeed();
-
-                                velocityX = Math.sin(rotation * Math.PI / 180) * speed;
-                                velocityY = Math.cos(rotation * Math.PI / 180) * -speed;
-
-                                if (rotation >= preyPop[x].getAngle()) {
-                                    rotation -= ts;
-                                } else if (rotation <= preyPop[x].getAngle()) {
-                                    rotation += ts;
-                                }
-
-                                currentX = preyPop[x].getX();
-                                currentY = preyPop[x].getY();
-
-                                currentX += velocityX;
-                                currentY += velocityY;
-
-                                preyPop[x].setRotation(rotation);
-                                preyPop[x].setX(currentX);
-                                preyPop[x].setY(currentY);
-
-                                break;
-
-                            }
-
-                            case Eat: {
-                                System.out.println("Prey is done eating!");
-                                preyPop[x].stateSearch();
-                                break;
-                            }
-
-                            case Escape: {
-                                System.out.println("Escaping!");
-                                preyPop[x].stateSearch();
-                                break;
-                            }
-
-                        }
-
                         //bounds setting for collision against food
                         preyRect = preyPop[x].getBounds();
                         preyRect.setRect(preyPop[x].getX(), preyPop[x].getY(), preyPop[x].getWidth(), preyPop[x].getHeight());
-                        preyPop[x].setBounds(preyRect);                        
+                        preyPop[x].setBounds(preyRect);
 
                         //border collision detection
                         if (preyPop[x].getX() + 9 >= viewPort.getWidth()) {
@@ -417,48 +338,133 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                         } else if (preyPop[x].getY() + 9 >= viewPort.getHeight()) {
                             preyPop[x].setY(viewPort.getHeight() - 9);
                         }
-                        
+
                         t = new AffineTransform();
                         //affinetransform stuff for drawing later
                         t.translate(preyPop[x].getX(), preyPop[x].getY());
                         //convert the angle to radians so the displayed image is correct to direction of agent
                         t.rotate(Math.toRadians(preyPop[x].getRotation()), 9 / 2, 9 / 2);
                         t.scale(1, 1);
-                        
                         preyPop[x].setAffineTransform(t);
-                        
-                        //polygon setting for collision against food for Search
-                        int dxpoly[] = {5, 30, -30};
-                        int dypoly[] = {5, -50, -50};
 
-                        Polygon po = new Polygon(dxpoly, dypoly, dxpoly.length);
+                        //fov generation notes:
+                        /*
+                         x, y, width, height, 0, fov, pie
+                         Width and height will be the same value.
+                         X and Y need to be half width or height.
+                         fov is the actual field of vision number
+                         */
+                        Arc2D fov = new Arc2D.Double(-40, -40, 90, 90, 0, 180, Arc2D.PIE);
+                        Shape fovShape = t.createTransformedShape(fov);
+                        preyPop[x].setFov(fovShape);
 
-                        preyPop[x].setPoly(po);
-                        
-                        Shape s = t.createTransformedShape(preyPop[x].getPoly());
-                        
-                        preyPop[x].setShape(s);
+                        rotation = preyPop[x].getRotation();
 
-                        //prey - food collision - SHOULD MOVE THIS TO EAT STATE.
-                        for (int j = 0; j < foodAmount; j++) {
-                            if (preyPop[x].getBounds().intersects(foodPop[j].getBounds())) {
-                                if (foodPop[j].isAlive()) {
-                                    preyPop[x].addEnergy(50);
-                                    foodPop[j].setAlive(false);
+                        ts = preyPop[x].getTurnSpeed();
+                        speed = preyPop[x].getSpeed();
+
+                        velocityX = Math.sin(rotation * Math.PI / 180) * speed;
+                        velocityY = Math.cos(rotation * Math.PI / 180) * -speed;
+
+                        if (rotation >= preyPop[x].getAngle()) {
+                            rotation -= ts;
+                        } else if (rotation <= preyPop[x].getAngle()) {
+                            rotation += ts;
+                        }
+
+                        currentX = preyPop[x].getX();
+                        currentY = preyPop[x].getY();
+
+                        currentX += velocityX;
+                        currentY += velocityY;
+
+                        preyPop[x].setRotation(rotation);
+                        preyPop[x].setX(currentX);
+                        preyPop[x].setY(currentY);
+
+                        switch (preyPop[x].getState()) {
+
+                            case Search: {
+
+                                double distanceX, distanceY, angle;
+                                int food;
+
+                                for (int j = 0; j < foodAmount; j++) {
+                                    if (!preyPop[x].isTarget() && foodPop[j].isAlive()) {
+                                        food = rNumber.nextInt(1 + (foodAmount - 1));
+
+                                        distanceX = foodPop[food].getX() - preyPop[x].getX();
+                                        distanceY = foodPop[food].getY() - preyPop[x].getY();
+
+                                        angle = Math.toDegrees(Math.atan2(distanceY, distanceX));
+
+                                        //When handling trigonometry a 0 is by default facing east. So giving the angle 90 degrees
+                                        //would make the prey face South. Adding a flat 90 degrees solves this problem cheaply.
+                                        preyPop[x].setAngle(angle + 90);
+
+                                        preyPop[x].setTarget(true);
+                                        preyPop[x].setFoodID(food);
+                                        
+                                    }
                                 }
+
+                                /*
+                                Collision between FOV and Food Rectangles.
+                                What it does :
+                                When a food Rectangle is within the boundaries of the FOV cone it will pass the ID of the food to the
+                                prey bot. This is so it can continue following angle to it and eat it
+                                */
+                                for (int j = 0; j < foodAmount; j++) {
+                                    if (preyPop[x].getFov().contains(foodPop[j].getBounds()) && foodPop[j].isAlive()) {
+                                        
+                                        preyPop[x].setFoodID(j);
+                                        preyPop[x].stateEat();
+                                        break;
+                                    }
+                                }
+                                break;
                             }
-                     
-                            if (preyPop[x].getShape().contains(foodPop[j].getBounds())) {
-                                System.out.println("Prey No : " + x + " has found food! Switching to Eat state!");
-                                preyPop[x].stateEat();
+
+                            case Eat: {
+
+                                for (int j = 0; j < foodAmount; j++) {
+                                    double distanceX, distanceY, angle;
+                                    int food;
+
+                                    food = preyPop[x].getFoodID();
+
+                                    distanceX = foodPop[food].getX() - preyPop[x].getX();
+                                    distanceY = foodPop[food].getY() - preyPop[x].getY();
+
+                                    angle = Math.toDegrees(Math.atan2(distanceY, distanceX));
+
+                                        //When handling trigonometry a 0 is by default facing east. So giving the angle 90 degrees
+                                    //would make the prey face South. Adding a flat 90 degrees solves this problem cheaply.
+                                    preyPop[x].setAngle(angle + 90);
+
+                                    if (preyPop[x].getBounds().intersects(foodPop[j].getBounds())) {
+                                        if (foodPop[j].isAlive()) {
+                                            preyPop[x].addEnergy(50);
+                                            foodPop[j].setAlive(false);
+                                            preyPop[x].setTarget(false);
+                                            preyPop[x].setFoodID(-1);
+                                            preyPop[x].stateSearch();
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+
+                            case Escape: {
+                                System.out.println("Escaping!");
+                                preyPop[x].stateSearch();
+                                break;
                             }
                         }
                     }
-
                 }
-
                 draw = true;
-
             }
         };
 
@@ -511,13 +517,10 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
             /*NOTES : Currently I can stop and start this timer via the buttons on the
              interface. However it also resets the whole timer. Rendering it a bit useless        
              */
-            t_preyTimer = new Timer(100, al_preyLogic);
+            t_preyTimer = new Timer(500, al_preyLogic);
             t_preyTimer.setRepeats(true);
             t_preyTimer.start();
 
-            t_preySearch = new Timer(5000, al_updateTarget);
-            t_preySearch.setRepeats(true);
-            t_preySearch.start();
             jtaConsole.append("\nEverything is correct. Running simulation now...");
             jbStart.setEnabled(false);
             jbStop.setEnabled(true);
@@ -641,8 +644,9 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
             super.paintComponent(g);
 
             g2d.clearRect(0, 0, (int) width, (int) height);
-
             //draw all of the grass as long as they are alive
+            
+            //change this so the affine transform is set during grass creation rather than in the drawloop
             if (draw) {
                 for (int x = 0; x < foodAmount; x++) {
                     if (foodPop[x].isAlive()) {
@@ -650,16 +654,15 @@ public class NBGeneticAlgorithm extends javax.swing.JFrame {
                         t.translate(foodPop[x].getX(), foodPop[x].getY());
                         t.scale(1, 1);
                         g2d.drawImage(grass, t, this);
-
                     }
                 }
-
+                
                 for (int x = 0; x < preyAmount; x++) {
                     if (preyPop[x].isAlive()) {
 
                         g2d.drawImage(prey, preyPop[x].getAffineTransform(), this);
-
-                        g2d.fill(preyPop[x].getShape());
+                        //this causes a bug when resetting while the simulation is paused. Unsure why
+                        g2d.draw(preyPop[x].getFov());
                     }
                 }
 

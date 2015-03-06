@@ -5,7 +5,6 @@
  */
 package nbgeneticalgorithm;
 
-import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -20,22 +19,26 @@ public class Bot{
 
     private double _x, _y, _targetX, _targetY;
     private double _turnSpeed, _rotation, _speed, _angle;
-    private boolean _alive;
+    private boolean _alive, _target = false;
     private double _energy = 0;
-    
-    private int[] xPoly;
-    private int[] yPoly;
     
     private AffineTransform _at;
     
     private Rectangle _bounds;
-    private Polygon _vision;
-    private Shape _shape;
+    private Shape _fov;
     
     private static final int width = 9, height = 9;
     
     Bot(){
         
+    }
+    
+    public void setTarget(boolean target){
+        this._target = target;
+    }
+    
+    public Boolean isTarget(){
+        return _target;
     }
     
     public void setAffineTransform(AffineTransform at){
@@ -46,20 +49,12 @@ public class Bot{
         return _at;
     }
     
-    public void setShape(Shape shape){
-        this._shape = shape;
+    public void setFov(Shape shape){
+        this._fov = shape;
     }
     
-    public Shape getShape(){
-        return _shape;
-    }
-    
-    public void setPoly(Polygon poly){
-        this._vision = poly;
-    }
-    
-    public Polygon getPoly(){
-        return _vision;
+    public Shape getFov(){
+        return _fov;
     }
 
     public Rectangle getBounds(){
@@ -172,8 +167,6 @@ class Food extends Bot{
         rect = new Rectangle();
         rect.setRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setBounds(rect);
-        
-        
     }
 }
 
@@ -238,6 +231,9 @@ class Prey extends Bot{
     private double r = 0;
     enum preyStates {Search, Eat, Escape};
     preyStates state;
+    
+    private int _foodID;
+    
     /*
     Constructor generates the attributes for each Prey created
     */
@@ -272,6 +268,14 @@ class Prey extends Bot{
         this.setBounds(rect);
         
         this.stateSearch();
+    }
+    
+    public void setFoodID(int id){
+        this._foodID = id;
+    }
+    
+    public int getFoodID(){
+        return _foodID;
     }
     
     public void stateSearch(){
