@@ -24,8 +24,18 @@ random food bot.
 
 Currently whole prey logic is done via Timers on a 100 millisecond loop. Going to want to use Threads now because they will be ultimately faster.
 
+Other Information :
+When drawing arc2d imagine a box surrounding it. The coords are the top left of that box. So offsetting by its width and height places it spot onto the bot
+
+Ending the simulation :
+This is for much later. The simulation should end when either all predators or when all prey bots are dead. Or if a timer runs out.
+
 Current bugs :
 
 ->The whole go to the angle is a bit broken. The prey will bounce back and forth trying to get itself to the right angle untill fully looping around in a broken way. Also if it doesnt encounter a food
 item it can shoot to a corner and get stuck.
-->When the simulation is paused then reset and started again it breaks. Due to the drawing of the fov shape. Unsure why
+-->Possible cause. When in Eat behaviour the angle is constantly reset. When this happens it flips over and over when it gets close to the angle.
+--->Possible fix. If there is no food in the vision during Eat state then go back to search. Seems to avoid the bouncing bug. Still have the getting stuck in the corner problem
+
+->When the simulation is paused then reset and started again it breaks. Due to the drawing of the fov shape.
+-->Update, still broken, don't reset if paused.
