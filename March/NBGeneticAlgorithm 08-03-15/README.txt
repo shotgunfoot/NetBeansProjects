@@ -17,6 +17,8 @@ Things that are not completed :
 
 ->Not expending energy when running around (maybe) Might want to make it an additive only thing and have it count towards fitness value in the GA
 
+->Refresh food population
+
 ->The genetic algorithm
 
 To do list :
