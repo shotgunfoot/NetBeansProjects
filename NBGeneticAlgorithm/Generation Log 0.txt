@@ -1,0 +1,4 @@
+Log file generated on Sat Mar 14 19:15:41 GMT 2015
+Predator Generation 0 Results.
+Population size 1	|	Mutation Rate 1
+Fittest predator was 0 With fitness score of 276.938218445954
