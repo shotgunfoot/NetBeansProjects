@@ -1,0 +1,23 @@
+Log file generated on Mon Mar 16 22:14:53 GMT 2015
+
+Predator Generation 0 Results.
+Population size 30	|	Mutation Rate 0
+
+Fittest predator was 21 With fitness score of 254.5757776094264
+Fittest Predator Attributes : 
+Speed : 1.0855162479074816 | Turn Speed : 3.215451974189579 | Field of View : 53.369683917910194 | Fov Length : 146.90512546941915
+
+Average of predator attributes :
+Avg Speed : 1.0499257900126233 | Avg Turn Speed : 3.0127239798647287 | Avg Fov : 44.07694920634637 | Avg Fov Length : 124.28785344824513
+
+Prey Generation 0 Results.
+Population size 30	|	Mutation Rate 0
+
+Fittest Prey was 0 With fitness score of 299.6625480647331
+Fittest Prey Attributes : 
+Speed : 0.7085783423578934 | Turn Speed : 3.6791439050128707 | Field of View : 158.4839478963515 | Fov Length : 96.7908779210108
+
+Average of predator attributes :
+Avg Speed : 0.7894232665643176 | Avg Turn Speed : 3.1738113071920178 | Avg Fov : 151.46088758667108 | Avg Fov Length : 94.43590589250533
+
+End of Line
