@@ -40,7 +40,8 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jbReset" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jbClear" min="-2" max="-2" attributes="0"/>
+                      <Component id="jcbFov" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -67,26 +68,25 @@
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jlPreyTurn_speed" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jlPrey_Fov" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlPreyID" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlPreyGeneration" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jlPrey_Speed" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jlPrey_Energy" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jlPrey_Fov_Width" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jlSimSpeed" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
+                                      <Component id="jlSimSpeed" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="jcbSimSlow" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Component id="jcbSimNormal" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jlPrey_Fov_Width" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPrey_Fov" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPrey_Energy" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPrey_Speed" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPreyTurn_speed" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPreyID" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jlPreyGeneration" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jtfPrey_ID" min="-2" pref="50" max="-2" attributes="0"/>
                                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
@@ -98,7 +98,7 @@
                                           <Component id="jtfPreyGeneration" min="-2" pref="50" max="-2" attributes="0"/>
                                           <Component id="jtfPrey_Speed" min="-2" pref="50" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
@@ -113,11 +113,6 @@
                                           <Component id="jlPred_Energy" alignment="1" min="-2" max="-2" attributes="0"/>
                                           <Component id="jlPred_Fov_Width" alignment="1" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="jcbSimSlow" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jcbSimNormal" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -190,36 +185,34 @@
                                   <Component id="jtfPreyGeneration" min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtfPrey_ID" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                          <Component id="jlPreyID" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtfPrey_Turn_speed" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                          <Component id="jlPreyTurn_speed" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtfPrey_Speed" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                          <Component id="jlPrey_Speed" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtfPrey_Energy" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                          <Component id="jlPrey_Energy" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtfPrey_Fov_Width" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                          <Component id="jlPrey_Fov_Width" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jtfPrey_Fov" min="-2" pref="25" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jlPrey_Fov" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_ID" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPreyID" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_Turn_speed" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPreyTurn_speed" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_Speed" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPrey_Speed" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_Energy" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPrey_Energy" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_Fov_Width" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPrey_Fov_Width" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jtfPrey_Fov" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="jlPrey_Fov" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -268,8 +261,8 @@
                           <Component id="jbStart" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jbStop" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jbReset" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jbClear" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jbResume" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbFov" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
@@ -390,27 +383,19 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbResetActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jbClear">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Clear"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbClearActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="jlFoodPopulationHint">
       <Properties>
-        <Property name="text" type="java.lang.String" value="1 - 1000"/>
+        <Property name="text" type="java.lang.String" value="2 - 1000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jlPreyPopulationHint">
       <Properties>
-        <Property name="text" type="java.lang.String" value="1 - 1000"/>
+        <Property name="text" type="java.lang.String" value="2 - 1000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jlPredatorPopulationHint">
       <Properties>
-        <Property name="text" type="java.lang.String" value="1 - 1000"/>
+        <Property name="text" type="java.lang.String" value="2 - 1000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jbResume">
@@ -494,7 +479,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlMutationHint">
       <Properties>
-        <Property name="text" type="java.lang.String" value="1 - 100"/>
+        <Property name="text" type="java.lang.String" value="0 - 100"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jtfPreyGeneration">
@@ -544,7 +529,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlPredGeneration">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Prey Gen"/>
+        <Property name="text" type="java.lang.String" value="Pred Gen"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jtfPred_Fov">
@@ -609,6 +594,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Simulation Speed"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jcbFov">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Fov"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbFovActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
